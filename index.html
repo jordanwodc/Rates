@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Shipping Calculator</title>
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Material Design Bootstrap -->
+        <link href="css/mdb.min.css" rel="stylesheet">
+
+        <link href="css/style.css" rel="stylesheet">
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div id="header" class="z-depth-1">
+            <h1>Shipping Calculator</h1>
+        </div>
+        <div id="content">
+            <div id="main" class="z-depth-1">
+
+                <div id="checkboxes_outer" class="z-depth-1">
+                    <h1>Options</h1>
+                    <div id="checkbox_container">
+                        <div class="checkbox_inner" id="cod_checkbox_container">
+                            <input type="checkbox" id="cb_cod" value="cod_checkbox">
+                            <span>COD</span>
+                        </div>
+                        <div class="checkbox_inner" id="liftgate_checkbox_container">
+                            <input type="checkbox" id="cb_liftgate" value="liftgate_checkbox">
+                            <span>Liftgate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="services_outer" class="z-depth-1">
+                    <h1>Carriers</h1>
+                    <div id="progress_bar_outer">
+                        <div id="progress_bar_inner"></div>
+                    </div>
+                    <div id="services_header"></div>
+                    <div id="services_inner"></div>
+                </div>
+            
+                <div id="location_div" class="md-form">
+                    <input type="text" id="zip_input" class="form-control">
+                    <label for="zip_input">Zip code</label>
+                    <div id="location_display">&nbsp;</div>
+                </div>
+
+                <div id="product_div">
+                    <h3>Product</h3>
+                    <select id="product_select">
+                        <option>&npsp;</option>
+                    </select>
+                </div>
+
+                <div id="pack_size_div">
+                    <h3>Pack Size</h3>
+                    <select id="size_select">
+                        <option>&npsp;</option>
+                        </select>
+                </div>
+
+                <div id="qty_div">
+                    <h3>Quantity</h3>
+                    <select id="qty_select">
+                        <option>&npsp;</option>
+                    </select>
+                </div>
+                
+
+                <div id="button_container">
+                    <button name="send" id="send_button" class="btn btn-primary">Get Rates</button>
+                </div>
+                
+                
+
+                <div id="service_display">&nbsp;</div>
+                <div id="breakdown_display">&nbsp;</div>
+                <hr>
+                <div id="amount_display">$0.00</div>
+
+            </div>
+            
+        </div>
+        <!-- JQuery -->
+        <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+
+        <!-- Bootstrap tooltips -->
+        <script type="text/javascript" src="js/tether.min.js"></script>
+
+        <!-- Bootstrap core JavaScript -->
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+        <!-- MDB core JavaScript -->
+        <script type="text/javascript" src="js/mdb.min.js"></script>
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
