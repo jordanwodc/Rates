@@ -2,6 +2,7 @@
 
 function get_ups_transit_time() {
     include 'auth/auth.php';
+    include 'ChromePhp.php';
     
     if(isset($_GET['call'])){
         $state = $_GET['state'];
@@ -13,6 +14,8 @@ function get_ups_transit_time() {
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_URL, "https://onlinetools.ups.com/rest/TimeInTransit");
+    curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17');
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
     curl_setopt($ch, CURLOPT_SSLVERSION, 6);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_HEADER, FALSE);
@@ -20,7 +23,7 @@ function get_ups_transit_time() {
     curl_setopt($ch, CURLOPT_POST, TRUE);
 
     curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/../misc/cacert.pem');
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
     curl_setopt($ch, CURLOPT_POSTFIELDS, "{
         \"Security\": {

@@ -46,7 +46,7 @@ body {
 	display: inline-block;
     text-align: center;
     left: 700px;
-    width: 240px;
+    width: 320px;
     padding: 5px;
 	background-color: #fff;
 }
@@ -126,7 +126,7 @@ hr {
 }
 
 .warning {
-    background-color: #fdd835;
+    background-color: #ffb74d;
 }
 
 .error {

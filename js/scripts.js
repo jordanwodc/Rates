@@ -13,7 +13,7 @@ const UPS_COD_FEE = 10.00,
       RR_FEE_MULTIPLIER = FREIGHT_MULTIPLIER,
       YRC_FEE_MULTIPLIER = FREIGHT_MULTIPLIER;
 
-const WARN = '#ffbb33',
+const WARN = '#ffb74d',
       ERROR = '#ef5350';
     
 // Location variables
@@ -38,18 +38,30 @@ var PRODUCTS,
     progress_total = 0,
     YRC_HOLIDAYS;
 
-var transit_time_enabled = false;
+var numbers = [
+    'zero',
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+    'seven',
+    'eight',
+    'nine',
+    'ten',
+    'eleven',
+    'twelve',
+    'thirteen',
+    'fourteen',
+    'fifteen',
+    'sixteen',
+    'seventeen',
+    'eighteen',
+    'nineteen'
+];
 
-$.ajax({
-    url:'php/ssltest.php?call=true',
-    type:'GET',
-    success: function(data) {
-        console.log(data);
-    },
-    error: function(data) {
-        alert('error')
-    }
-});
+var transit_time_enabled = true;
 
 $.when(
 	$.getJSON('misc/products.json', function(data) {
@@ -325,9 +337,7 @@ function get_rates_yrc(ship_yyyymmdd, total_weight, total_height) {
             update_progress_bar();
             try {
                 yrc_total = (parseFloat(xmlDoc.getElementsByTagName('TotalCharges')[0].childNodes[0].nodeValue) / 100) * YRC_FEE_MULTIPLIER;
-                var date = xmlDoc.getElementsByTagName('StandardDate')[0].childNodes[0].nodeValue; 
-                
-               
+                var date = xmlDoc.getElementsByTagName('StandardDate')[0].childNodes[0].nodeValue;
             }
             catch (e) {
                 yrc_total = 999999;
@@ -365,13 +375,11 @@ function get_rates_rr(total_weight) {
             liftgate: liftgate_checked()
         },
         beforeSend: function() {
-            $('#services_inner').append(build_service_display_contents('RoadRunner Freight'));
+            $('#services_inner').append(build_service_display_contents('Roadrunner Transportation Systems'));
             progress_total += 1;
             update_progress_bar();
         },
         success: function(data) {
-            console.log('roadrunner');
-            console.log(data);
             progress_current += 1;
             update_progress_bar();
             if (data.indexOf('Error') === -1) {
@@ -379,17 +387,16 @@ function get_rates_rr(total_weight) {
                 var transit_days = data.split('<EstimatedTransitDays>')[1].split('</EstimatedTransitDays>')[0];
                 var date = new Date();
                 date.setDate(date.getDate() + parseInt(transit_days, 10));
-                date = get_next_business_day(date);
-                
+                date = get_yyyymmdd(calculate_business_days(date));
             }
             else {
                 rr_total = 999999;
                 date = null;
             }
-            $('#roadrunner_freight_service_display').find('.spinner').removeClass('loading');
-            $('#roadrunner_freight_service_display').find('.spinner').html('✓');
-            quotes['roadrunner_freight'] = {
-                name: 'RoadRunner Freight',
+            $('#roadrunner_transportation_systems_service_display').find('.spinner').removeClass('loading');
+            $('#roadrunner_transportation_systems_service_display').find('.spinner').html('✓');
+            quotes['roadrunner_transportation_systems'] = {
+                name: 'RoadRunner Transportation Systems',
                 amount: rr_total,
                 del_date: date
             };
@@ -418,28 +425,40 @@ function get_rates_ptl(total_weight) {
             liftgate: liftgate_checked()
         },
         beforeSend: function() {
-            $('#services_inner').append(build_service_display_contents('Peninsula Truck'));
+            $('#services_inner').append(build_service_display_contents('Peninsula Truck Lines'));
             progress_total += 1;
             update_progress_bar();
         },
         success: function(data) {
+            console.log(data);
             progress_current += 1;
             update_progress_bar();
             if (data.indexOf('errors') === -1) {
                 ptl_total = data.split('<totalCharge>')[1].split('</totalCharge>')[0] * PTL_FEE_MULTIPLIER;
                 var transit_days = data.split('<deliveryDay')[1].split('</deliveryDay>')[0];
                 var date = new Date();
+                var days = 999;
+                var deliveryText = data.split('<deliveryDay>')[1];
+                deliveryText = deliveryText.split('</deliveryDay>')[0];
+                var mult = 1;
+                if (deliveryText.toLowerCase().indexOf('week') > -1) mult = 7;
+                for (var i = 0; i < numbers.length; i++) {
+                    if (deliveryText.toLowerCase().indexOf(numbers[i]) > -1) {
+                        days = i;
+                    }
+                }
+                console.log(days);
                 //date.setDate(date.getDate() + parseInt(transit_days, 10));
-                date = get_next_business_day(date);
+                date = get_yyyymmdd(calculate_business_days(date, days));
             }
             else {
                 ptl_total = 999998;
                 date = null;
             }
-            $('#peninsula_truck_service_display').find('.spinner').removeClass('loading');
-            $('#peninsula_truck_service_display').find('.spinner').html('✓');
-            quotes['peninsula_truck'] = {
-                name: 'Peninsula Truck',
+            $('#peninsula_truck_lines_service_display').find('.spinner').removeClass('loading');
+            $('#peninsula_truck_lines_service_display').find('.spinner').html('✓');
+            quotes['peninsula_truck_lines'] = {
+                name: 'Peninsula Truck Lines',
                 amount: ptl_total,
                 del_date: date
             };
@@ -465,15 +484,18 @@ function compare_quotes() {
         if (quotes[quote]['amount'] === 999999) {
             $('#' + quotes[quote]['name'].toLowerCase().replace(/\s/g, "_") + '_service_display').addClass('error');
             $(display).find('.service_amount').html('Error getting rates');
+            $(display).find('.service_delivery').html('');
         }
         else if (quotes[quote]['amount'] === 999998) {
             $('#' + quotes[quote]['name'].toLowerCase().replace(/\s/g, "_") + '_service_display').addClass('warning');
             $(display).find('.service_amount').html('Unavailable for destination');
+            $(display).find('.service_delivery').html('');
         }
         else {
+            $(display).find('.service_delivery').html('Estimated delivery: ' + format_date(quotes[quote]['del_date']));
             $(display).find('.service_amount').html('Amount: $' + quotes[quote]['amount'].toFixed(2));
         }
-        if (transit_time_enabled) $(display).find('.service_delivery').html('Estimated Delivery: ' + format_date(quotes[quote]['del_date']));
+        if (transit_time_enabled) ;
         if (amount !== undefined) {
             if (quotes[quote]['amount'] < amount) {
                 amount = quotes[quote]['amount'];
@@ -791,7 +813,7 @@ function monitor_liftgate_checkbox() {
                         reset_data('Liftgate service removed');
                     }
                 }
-        }
+            }
             else reset_data();
         }
     });
@@ -824,27 +846,30 @@ function get_yyyymmdd(date) {
 }
 
 function format_date(yyyymmdd) {
+    var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 	if (yyyymmdd !== null) {
 	    var yyyy = yyyymmdd.substring(0, 4);
 	    var mm = yyyymmdd.substring(4, 6);
 	    var dd = yyyymmdd.substring(6, 8);
+        var day = days[parseInt(dd) % 7];
 	    
-	    return mm + '/' + dd + '/' + yyyy; 
+	    return day + ' ' + mm + '/' + dd + '/' + yyyy; 
 	}
 	else return '01/01/1970';
 }
 
-function get_next_business_day(date) {
+function calculate_business_days(date, days_to_add=0) {
     var yyyymmdd = get_yyyymmdd(date);
     
     while (YRC_HOLIDAYS.indexOf(yyyymmdd) > -1) {
         date.setDate(date.getDate() + 1);
-        yyyymmdd = get_yyyymmdd(date);
     }
     while (!(date.getDay() % 6)) date.setDate(date.getDate() + 1);
-    yyyymmdd = get_yyyymmdd(date);
+    if (days_to_add > 0) {
+        date.setDate(date.getDate() + days_to_add);
+    }
     
-    return yyyymmdd;
+    return date;
 }
 
 function pluralizer(qty, label) {

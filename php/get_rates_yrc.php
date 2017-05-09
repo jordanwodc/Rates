@@ -16,8 +16,9 @@ function get_rates_yrc() {
         $liftgate = $_GET['liftgate'];
     }
     
-    $service = 'GDEL';
+    $service = 'STD';
 
+    /*
     $cont = true;
     $zip_file = fopen('../misc/zipcode.csv', 'r');
     while (!feof($zip_file) && $cont) {
@@ -30,6 +31,7 @@ function get_rates_yrc() {
             }
         }
     }
+    */
     
     $options_count = 0;
     $options_text = "";
