@@ -549,30 +549,23 @@ function build_qty_menu() {
 	var qtys = product['pack_sizes'][selected_size()]['available_qtys'];
 	var menu = $('#qty_select');
 	$(menu).html('');
-	if (qtys.length > 1) {
-		$(menu).prop('disabled', false);
-		$.each(qtys, function(index, line) {
-			if (line.indexOf('-') > -1) {
-				var splits = line.split('-');
-				var start = splits[0];
-				var end = splits[1];
-				for (var i = start; i <= end; i++) {
-					var option_label = i + ' ' + label;
-					$(menu).append(build_option(pluralizer(i, option_label), i));
-				}
-			}
-			else {
-				var qty = line;
-                var option_label = line + ' ' + label;
-				$(menu).append(build_option(pluralizer(qty, option_label), qty));
-			}
-		});
-	}
-	else {
-		$(menu).prop('disabled', true);
-        var option_label = qtys + ' ' + label;
-		$(menu).append(build_option(pluralizer(qtys, option_label), qtys));
-	}
+    $(menu).prop('disabled', false);
+    $.each(qtys, function(index, line) {
+        if (line.indexOf('-') > -1) {
+            var splits = line.split('-');
+            var start = parseInt(splits[0]);
+            var end = parseInt(splits[1]);
+            for (var i = start; i <= end; i++) {
+                var option_label = i + ' ' + label;
+                $(menu).append(build_option(pluralizer(i, option_label), i));
+            }
+        }
+        else {
+            var qty = line;
+            var option_label = line + ' ' + label;
+            $(menu).append(build_option(pluralizer(qty, option_label), qty));
+        }
+    });
 }
 
 function build_option(label, value=null, selected='') {
