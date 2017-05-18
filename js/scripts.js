@@ -84,9 +84,22 @@ $.when(
 });
 
 function submit_data() {
-	reset_data();
-    $('#services_outer').css('visibility', 'visible');
-    validate_zip();
+    function go() {
+        reset_data();
+        $('#services_outer').css('visibility', 'visible');
+        validate_zip();
+    }
+    if (cod_checked()) {
+        if (total_qty() <= selected_product['max_cod']) {
+            go();
+        }
+        else {
+            update_location_display('Quantity exceeds maximum amount for COD', 'error', 18);
+        }
+    }
+    else {
+        go();
+    }
 }
 
 

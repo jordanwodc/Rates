@@ -269,14 +269,14 @@
             }
         }
     },
-    "Chicken Fuel": {
+    "chicken fuel": {
         "unit": "bags",
         "standard_pack_size": 12,
         "pallet_shipments": true,
         "pallet_minimum": 72,
         "pallet_row": 72,
         "freight_class": 70,
-        "max_cod": 0,
+        "max_cod": 96,
         "hazmat": true,
         "pack_sizes": {
             "12": {
@@ -298,6 +298,39 @@
                     "36"
                 ],
                 "label": "mastercase"
+            }
+        }
+    },
+    "cann-care synergy+": {
+        "unit": "pints",
+        "standard_pack_size": 14,
+        "pallet_shipments": true,
+        "pallet_minimum": 112,
+        "pallet_row": 224,
+        "freight_class": 70,
+        "max_cod": 140,
+        "hazmat": false,
+        "pack_sizes": {
+            "14": {
+                "dimensions": {
+                    "length": 12,
+                    "width": 10,
+                    "height": 7
+                },
+                "weight": {
+                    "unit": "pound",
+                    "value": 18
+                },
+                "available_qtys": [
+                    "1-16",
+                    "20",
+                    "24",
+                    "28",
+                    "32",
+                    "48",
+                    "64"
+                ],
+                "label": "pack"
             }
         }
     }
