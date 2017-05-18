@@ -830,13 +830,16 @@ function monitor_liftgate_checkbox() {
     Utility functions
 **********************************************************************/
 
-function title_case(str) {
-	if ((str === null) || (str === '')) return false;
-	else str = str.toString();
-    
-    return str.replace(/\w\S*/g, function(txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
+function title_case(input) {
+    var words = input.split(/(\s|-)+/),
+        output = [];
+
+    for (var i = 0, len = words.length; i < len; i += 1) {
+        output.push(words[i][0].toUpperCase() +
+                    words[i].toLowerCase().substr(1));
+    }
+
+    return output.join('');
 }
 
 function get_yyyymmdd(date) {
